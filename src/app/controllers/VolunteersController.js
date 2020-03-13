@@ -24,7 +24,9 @@ class VolunteersController {
   async store(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string().required(),
-      email: Yup.string().required(),
+      email: Yup.string()
+        .email()
+        .required(),
       password: Yup.string()
         .min(6)
         .required(),

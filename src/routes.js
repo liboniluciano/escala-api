@@ -1,9 +1,13 @@
 import { Router } from 'express';
 
+import SessionController from './app/controllers/SessionController';
 import FunctionsController from './app/controllers/FunctionsController';
 import VolunteersController from './app/controllers/VolunteersController';
 
 const routes = new Router();
+
+/** Rota para autenticação */
+routes.post('/session', SessionController.store);
 
 /** Rotas para Funções */
 routes.get('/funcoes', FunctionsController.index);
