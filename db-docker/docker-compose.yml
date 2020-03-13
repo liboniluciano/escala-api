@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:8.0.17
+    environment:
+      MYSQL_ROOT_PASSWORD: docker
+      MYSQL_DATABASE: escala-casa
+      MYSQL_USER: casa
+      MYSQL_PASSWORD: docker
+    ports:
+      - "3308:3306"
