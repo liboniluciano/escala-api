@@ -1,10 +1,12 @@
+require('dotenv').config();
+
 module.exports = {
   dialect: 'mysql',
-  host: 'localhost',
-  username: 'casa',
-  port: 3308,
-  password: 'docker',
-  database: 'escala-casa',
+  host: process.env.DB_HOST,
+  username: process.env.DB_USER,
+  port: process.env.DB_PORT,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
   define: {
     timestamps: true,
     underscored: true,

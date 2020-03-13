@@ -1,5 +1,7 @@
 node_modules/
- db-docker/
+db-docker/
+
+.env
 
 # Logs
 logs
@@ -9,4 +11,3 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
-.
