@@ -3,6 +3,12 @@ import Functions from '../models/Functions';
 
 class FunctionsController {
   async index(req, res) {
+    if (!req.isAdmin) {
+      return res.status(404).json({
+        erro: 'Você não tem permissão para acessar essa funcionalidade',
+      });
+    }
+
     const functions = await Functions.findAll({
       order: ['created_at'],
       attributes: ['id', 'name', 'canceled_at'],
@@ -12,12 +18,23 @@ class FunctionsController {
   }
 
   async store(req, res) {
+    if (!req.isAdmin) {
+      return res.status(404).json({
+        erro: 'Você não tem permissão para acessar essa funcionalidade',
+      });
+    }
+
     const func = await Functions.create(req.body);
 
     return res.status(201).json(func);
   }
 
   async update(req, res) {
+    if (req.isAdmin === null) {
+      return res.status(404).json({
+        erro: 'Você não tem permissão para acessar essa funcionalidade',
+      });
+    }
     const { id } = req.params;
 
     const schema = Yup.object().shape({
@@ -40,6 +57,11 @@ class FunctionsController {
   }
 
   async delete(req, res) {
+    if (!req.isAdmin) {
+      return res.status(404).json({
+        erro: 'Você não tem permissão para acessar essa funcionalidade',
+      });
+    }
     const { id } = req.params;
 
     const func = await Functions.findByPk(id);

@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import { promisify } from 'util';
 
 import authConfig from '../../config/auth';
+import Volunteer from '../models/Volunteers';
 
 export default async (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -13,8 +14,13 @@ export default async (req, res, next) => {
 
   try {
     const decoded = await promisify(jwt.verify)(token, authConfig.secret);
-
     req.userId = decoded.id;
+
+    /** Salvando o tipo do usuário (admin) */
+    const isAdmin = await Volunteer.findByPk(req.userId, {
+      attributes: ['admin'],
+    });
+    req.isAdmin = isAdmin.admin;
 
     return next();
   } catch (error) {

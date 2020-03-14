@@ -3,6 +3,11 @@ import Volunteers from '../models/Volunteers';
 
 class VolunteersController {
   async index(req, res) {
+    if (!req.isAdmin) {
+      return res.status(404).json({
+        erro: 'Você não tem permissão para acessar essa funcionalidade',
+      });
+    }
     const idVolunteer = req.params.id;
 
     if (idVolunteer) {
@@ -34,7 +39,7 @@ class VolunteersController {
       admin: Yup.boolean(),
     });
 
-    /** Valdiando payload */
+    /** Validando payload */
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ erro: 'Os campos não estão corretos!' });
     }
