@@ -68,6 +68,59 @@ class VolunteersController {
       .status(201)
       .json({ id, name, email, telephone, admin, disabled });
   }
+
+  async update(req, res) {
+    /** Verificar payload */
+    const schema = Yup.object().shape({
+      name: Yup.string(),
+      email: Yup.string().email(),
+      oldPassword: Yup.string().min(6),
+      password: Yup.string()
+        .min(6)
+        .when('oldPassword', (oldPassword, field) =>
+          oldPassword ? field.required() : field
+        ),
+      confirmPassword: Yup.string().when('password', (password, field) =>
+        password ? field.required().oneOf([Yup.ref('password')]) : field
+      ),
+    });
+
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ erro: 'Os campos não estão corretos!' });
+    }
+
+    const { email, oldPassword } = req.body;
+
+    const volunteer = await Volunteers.findByPk(req.userId);
+
+    // Para atualizar o e-mail, deve ser diferente do atual
+    if (email !== undefined && email !== volunteer.email) {
+      // E deve ser diferente dos emails cadastrados
+      const volunteerExists = await Volunteers.findOne({ where: { email } });
+
+      if (volunteerExists) {
+        return res
+          .status(400)
+          .json({ erro: 'Já existe um usuário com este e-mail!' });
+      }
+    }
+
+    /** Verificar se o editado é o mesmo que o logado (user normal) */
+    if (req.userId !== volunteer.id && req.isAdmin === false) {
+      return res
+        .status(400)
+        .json({ erro: 'Você pode alterar apenas o seu cadastro!' });
+    }
+
+    /** Validando senhas */
+    if (oldPassword && !(await volunteer.checkPassword(oldPassword))) {
+      return res.status(401).json({ error: 'Password does not match' });
+    }
+
+    const { id, name, telephone } = await volunteer.update(req.body);
+
+    return res.json({ id, name, email, telephone });
+  }
 }
 
 export default new VolunteersController();

@@ -25,6 +25,6 @@ routes.delete('/funcoes/:id', FunctionsController.delete);
 
 routes.get('/volunteers', VolunteersController.index);
 routes.get('/volunteers/:id', VolunteersController.index);
-// routes.put('/volunteers', VolunteersController.update);
+routes.put('/volunteers', VolunteersController.update);
 
 export default routes;

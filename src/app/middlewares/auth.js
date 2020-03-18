@@ -22,6 +22,8 @@ export default async (req, res, next) => {
     });
     req.isAdmin = isAdmin.admin;
 
+    /** Depois verificar se é líder */
+
     return next();
   } catch (error) {
     return res.status(401).json({ error: 'Token invalid' });
