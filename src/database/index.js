@@ -4,8 +4,9 @@ import databaseConfig from '../config/database';
 
 import Functions from '../app/models/Functions';
 import Volunteers from '../app/models/Volunteers';
+import Groups from '../app/models/Groups';
 
-const models = [Functions, Volunteers];
+const models = [Functions, Volunteers, Groups];
 
 class Database {
   constructor() {
