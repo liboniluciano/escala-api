@@ -4,6 +4,7 @@ import SessionController from './app/controllers/SessionController';
 import FunctionsController from './app/controllers/FunctionsController';
 import VolunteersController from './app/controllers/VolunteersController';
 import GroupsController from './app/controllers/GroupsController';
+import VolunteersFunctionsController from './app/controllers/VolunteersFunctionsController';
 
 import AuthMiddleware from './app/middlewares/auth';
 import AdminMiddleware from './app/middlewares/adm';
@@ -15,6 +16,10 @@ routes.post('/volunteers', VolunteersController.store);
 
 /** Rota para autenticação */
 routes.post('/session', SessionController.store);
+
+/** Rotas para cadastro das funcões do usuário */
+routes.post('/volunteers-functions', VolunteersFunctionsController.store);
+routes.get('/volunteers-functions/:id', VolunteersFunctionsController.index);
 
 /** Rotas que precisam de autenticação */
 routes.use(AuthMiddleware);
@@ -38,5 +43,13 @@ routes.get('/groups', GroupsController.index);
 routes.get('/groups/:id', GroupsController.index);
 routes.put('/groups/:id', GroupsController.update);
 routes.delete('/groups/:id', GroupsController.delete);
+
+/** Rotas para funções dos voluntários */
+routes.get('/volunteers-functions', VolunteersFunctionsController.index);
+routes.put('/volunteers-functions/:id', VolunteersFunctionsController.update);
+routes.delete(
+  '/volunteers-functions/:id',
+  VolunteersFunctionsController.delete
+);
 
 export default routes;
