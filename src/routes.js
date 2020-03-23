@@ -5,6 +5,7 @@ import FunctionsController from './app/controllers/FunctionsController';
 import VolunteersController from './app/controllers/VolunteersController';
 import GroupsController from './app/controllers/GroupsController';
 import VolunteersFunctionsController from './app/controllers/VolunteersFunctionsController';
+import VolunteersGroupsController from './app/controllers/VolunteersGroupsController';
 
 import AuthMiddleware from './app/middlewares/auth';
 import AdminMiddleware from './app/middlewares/adm';
@@ -51,5 +52,12 @@ routes.delete(
   '/volunteers-functions/:id',
   VolunteersFunctionsController.delete
 );
+
+/** Rotas para grupo dos voluntários */
+routes.post('/volunteers-groups', VolunteersGroupsController.store);
+routes.get('/volunteers-groups/:id', VolunteersGroupsController.index);
+routes.get('/volunteers-groups', VolunteersGroupsController.index);
+routes.put('/volunteers-groups/:id', VolunteersGroupsController.update);
+routes.delete('/volunteers-groups/:id', VolunteersGroupsController.delete);
 
 export default routes;

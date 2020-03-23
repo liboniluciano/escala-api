@@ -6,8 +6,15 @@ import Functions from '../app/models/Functions';
 import Volunteers from '../app/models/Volunteers';
 import Groups from '../app/models/Groups';
 import VolunteersFunctions from '../app/models/VolunteersFunctions';
+import VolunteersGroups from '../app/models/VolunteersGroups';
 
-const models = [Functions, Volunteers, Groups, VolunteersFunctions];
+const models = [
+  Functions,
+  Volunteers,
+  Groups,
+  VolunteersFunctions,
+  VolunteersGroups,
+];
 
 class Database {
   constructor() {
