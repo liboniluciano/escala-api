@@ -162,7 +162,16 @@ class VolunteersFunctionsController {
         .json({ erro: 'A função não foi encontrado ou está desativada' });
     }
 
-    /** TODO -> verificar se voluntário já está naquela função */
+    /** Verificar se voluntário já está naquela função */
+    const existFunction = await VolunteersFunctions.findOne({
+      where: { id_function },
+    });
+
+    if (existFunction) {
+      return res
+        .status(401)
+        .json({ erro: 'O voluntário já está alocado nesta função!' });
+    }
 
     const { id } = await volFunc.update({ id_volunteer, id_function });
 
