@@ -7,6 +7,7 @@ import Volunteers from '../app/models/Volunteers';
 import Groups from '../app/models/Groups';
 import VolunteersFunctions from '../app/models/VolunteersFunctions';
 import VolunteersGroups from '../app/models/VolunteersGroups';
+import Ministries from '../app/models/Ministries';
 
 const models = [
   Functions,
@@ -14,6 +15,7 @@ const models = [
   Groups,
   VolunteersFunctions,
   VolunteersGroups,
+  Ministries,
 ];
 
 class Database {
