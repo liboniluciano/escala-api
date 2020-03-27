@@ -8,6 +8,7 @@ import VolunteersFunctionsController from './app/controllers/VolunteersFunctions
 import VolunteersGroupsController from './app/controllers/VolunteersGroupsController';
 import Ministries from './app/controllers/MinistriesController';
 import VolunteersMinistries from './app/controllers/VolunteersMinistriesController';
+import PeriodsController from './app/controllers/PeriodsController';
 
 import AuthMiddleware from './app/middlewares/auth';
 import AdminMiddleware from './app/middlewares/adm';
@@ -74,5 +75,12 @@ routes.post('/volunteers-ministries', VolunteersMinistries.store);
 routes.get('/volunteers-ministries/:id', VolunteersMinistries.index);
 routes.put('/volunteers-ministries/:id', VolunteersMinistries.update);
 routes.delete('/volunteers-ministries', VolunteersMinistries.delete);
+
+/** Rotas para períodos */
+routes.post('/periods', PeriodsController.store);
+routes.get('/periods', PeriodsController.index);
+routes.get('/periods/:id', PeriodsController.index);
+routes.put('/periods/:id', PeriodsController.update);
+routes.delete('/periods/:id', PeriodsController.delete);
 
 export default routes;
