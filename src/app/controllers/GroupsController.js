@@ -13,7 +13,7 @@ class GroupsController {
 
     /** Buscando todos grupos que não foram desativados */
     const groups = await Groups.findAll({
-      where: { desatived_at: null },
+      where: { disabled_at: null },
       attributes: ['id', 'name'],
     });
     return res.json(groups);
@@ -22,6 +22,7 @@ class GroupsController {
   async store(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string().required(),
+      id_ministry: Yup.number().required(),
     });
 
     if (!(await schema.isValid(req.body))) {
@@ -30,7 +31,7 @@ class GroupsController {
 
     const group = await Groups.create({
       name: req.body.name,
-      volunteer_id_created: req.userId,
+      id_volunteer_created: req.userId,
     });
 
     const { id, name } = group;
@@ -40,7 +41,8 @@ class GroupsController {
 
   async update(req, res) {
     const schema = Yup.object().shape({
-      name: Yup.string().required(),
+      name: Yup.string(),
+      id_ministry: Yup.number(),
     });
 
     if (!(await schema.isValid(req.body))) {
@@ -48,7 +50,7 @@ class GroupsController {
     }
 
     const group = await Groups.findByPk(req.params.id, {
-      where: { desatived_at: null },
+      where: { disabled_at: null },
     });
 
     if (!group) {
@@ -64,7 +66,7 @@ class GroupsController {
 
   async delete(req, res) {
     const group = await Groups.findByPk(req.params.id, {
-      where: { desatived_at: null },
+      where: { disabled_at: null },
     });
 
     if (!group) {
@@ -73,8 +75,7 @@ class GroupsController {
         .json({ erro: 'Este grupo não existe ou foi desativado!' });
     }
 
-    console.log(group);
-    await group.update({ desatived_at: new Date() });
+    await group.update({ disabled_at: new Date() });
     return res.send();
   }
 }

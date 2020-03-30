@@ -11,6 +11,7 @@ import Ministries from '../app/models/Ministries';
 import VolunteersMinistries from '../app/models/VolunteersMinistries';
 import Periods from '../app/models/Periods';
 import Scales from '../app/models/Scales';
+import Categories from '../app/models/Categories';
 
 const models = [
   Functions,
@@ -22,6 +23,7 @@ const models = [
   VolunteersMinistries,
   Periods,
   Scales,
+  Categories,
 ];
 
 class Database {

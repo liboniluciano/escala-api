@@ -55,18 +55,11 @@ class VolunteersController {
         .json({ erro: 'Já existe um usuário com este e-mail' });
     }
 
-    const {
-      id,
-      name,
-      email,
-      telephone,
-      admin,
-      disabled,
-    } = await Volunteers.create(req.body);
+    const { id, name, email, telephone, admin } = await Volunteers.create(
+      req.body
+    );
 
-    return res
-      .status(201)
-      .json({ id, name, email, telephone, admin, disabled });
+    return res.status(201).json({ id, name, email, telephone, admin });
   }
 
   async update(req, res) {

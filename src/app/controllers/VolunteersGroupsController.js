@@ -99,15 +99,15 @@ class VolunteersGroupsController {
     }
 
     /** Verificando se o voluntário já está alocado naquela função do grupo */
-    const funcGroupExists = VolunteersGroups.findOne({
-      where: { id_function },
-    });
+    // const funcGroupExists = VolunteersGroups.findOne({
+    //   where: { id_function },
+    // });
 
-    if (funcGroupExists) {
-      return res
-        .status(401)
-        .json({ erro: 'O voluntário já está alocado nesta função!' });
-    }
+    // if (funcGroupExists) {
+    //   return res
+    //     .status(401)
+    //     .json({ erro: 'O voluntário já está alocado nesta função!' });
+    // }
 
     /** Inserindo voluntário no grupo */
     const { id } = await VolunteersGroups.create(req.body);

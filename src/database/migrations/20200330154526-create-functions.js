@@ -1,30 +1,22 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('volunteers_ministries', {
+    return queryInterface.createTable('functions', {
       id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
       },
-      id_volunteer: {
+      id_category: {
         type: Sequelize.INTEGER,
-        references: { model: 'volunteers', key: 'id' },
+        references: { model: 'categories', key: 'id' },
         onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
-        allowNull: false,
-      },
-      id_ministry: {
-        type: Sequelize.INTEGER,
-        references: { model: 'ministries', key: 'id' },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
-        allowNull: false,
-      },
-      flg_leader: {
-        type: Sequelize.BOOLEAN,
+        onDelete: 'SET NULL',
         allowNull: true,
-        defaultValue: false,
+      },
+      name: {
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       disabled_at: {
         type: Sequelize.DATE,
@@ -42,6 +34,6 @@ module.exports = {
   },
 
   down: queryInterface => {
-    return queryInterface.dropTable('volunteers_ministries');
+    return queryInterface.dropTable('functions');
   },
 };

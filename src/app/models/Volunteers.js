@@ -11,7 +11,6 @@ class Volunteers extends Model {
         password_hash: Sequelize.STRING,
         telephone: Sequelize.INTEGER,
         admin: Sequelize.BOOLEAN,
-        disabled: Sequelize.BOOLEAN,
         disabled_at: Sequelize.DATE,
       },
       {

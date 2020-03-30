@@ -1,10 +1,9 @@
 import Sequelize, { Model } from 'sequelize';
 
-class Functions extends Model {
+class Categories extends Model {
   static init(sequelize) {
     super.init(
       {
-        id_category: Sequelize.INTEGER,
         name: Sequelize.STRING,
         disabled_at: Sequelize.DATE,
       },
@@ -15,10 +14,6 @@ class Functions extends Model {
 
     return this;
   }
-
-  static associate(models) {
-    this.belongsTo(models.Categories, { foreignKey: 'id_category' });
-  }
 }
 
-export default Functions;
+export default Categories;

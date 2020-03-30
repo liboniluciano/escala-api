@@ -9,6 +9,8 @@ import VolunteersGroupsController from './app/controllers/VolunteersGroupsContro
 import Ministries from './app/controllers/MinistriesController';
 import VolunteersMinistries from './app/controllers/VolunteersMinistriesController';
 import PeriodsController from './app/controllers/PeriodsController';
+import ScalesController from './app/controllers/ScalesController';
+import CategoriesController from './app/controllers/CategoriesController';
 
 import AuthMiddleware from './app/middlewares/auth';
 import AdminMiddleware from './app/middlewares/adm';
@@ -34,6 +36,9 @@ routes.put('/volunteers', VolunteersController.update);
 
 /** Rotas que precisam de autenticação e administrador */
 routes.use(AdminMiddleware);
+
+/** Rotas para categorias */
+routes.post('/categories', CategoriesController.store);
 
 /** Rotas para Funções */
 routes.get('/funcoes', FunctionsController.index);
@@ -82,5 +87,8 @@ routes.get('/periods', PeriodsController.index);
 routes.get('/periods/:id', PeriodsController.index);
 routes.put('/periods/:id', PeriodsController.update);
 routes.delete('/periods/:id', PeriodsController.delete);
+
+/** Rotas para manutenção de escalas */
+routes.post('/scales', ScalesController.store);
 
 export default routes;

@@ -3,12 +3,6 @@ import Functions from '../models/Functions';
 
 class FunctionsController {
   async index(req, res) {
-    if (!req.isAdmin) {
-      return res.status(404).json({
-        erro: 'Você não tem permissão para acessar essa funcionalidade',
-      });
-    }
-
     const functions = await Functions.findAll({
       order: ['created_at'],
       attributes: ['id', 'name', 'canceled_at'],
@@ -18,10 +12,15 @@ class FunctionsController {
   }
 
   async store(req, res) {
-    if (!req.isAdmin) {
-      return res.status(404).json({
-        erro: 'Você não tem permissão para acessar essa funcionalidade',
-      });
+    const schema = Yup.object().shape({
+      id_category: Yup.number().required(),
+      name: Yup.string()
+        .max(60)
+        .required(),
+    });
+
+    if (!(await schema.isValid(req.body))) {
+      return res.status(401).json({ message: 'Os campos não estão válidos!' });
     }
 
     const func = await Functions.create(req.body);
@@ -30,50 +29,40 @@ class FunctionsController {
   }
 
   async update(req, res) {
-    if (req.isAdmin === null) {
-      return res.status(404).json({
-        erro: 'Você não tem permissão para acessar essa funcionalidade',
-      });
-    }
-    const { id } = req.params;
-
     const schema = Yup.object().shape({
-      name: Yup.string().required(),
+      id_category: Yup.number(),
+      name: Yup.string().max(60),
     });
 
     if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ erro: 'Os campos não estão corretos!' });
+      return res.status(401).json({ message: 'Os campos não estão válidos!' });
     }
 
-    const func = await Functions.findByPk(id);
+    const idFunction = req.params.id;
+
+    const func = await Functions.findByPk(idFunction);
 
     if (!func) {
       return res.status(404).json({ erro: 'Esta função não existe' });
     }
 
-    const { name, canceled_at } = await func.update(req.body);
+    const { id, id_category, name } = await func.update(req.body);
 
-    return res.json({ name, canceled_at });
+    return res.json({ id, name, id_category });
   }
 
   async delete(req, res) {
-    if (!req.isAdmin) {
-      return res.status(404).json({
-        erro: 'Você não tem permissão para acessar essa funcionalidade',
-      });
-    }
     const { id } = req.params;
 
-    const func = await Functions.findByPk(id);
+    const func = await Functions.findByPk(id, {
+      where: { disabled_at: null },
+    });
 
     if (!func) {
-      return res.status(404).json({ erro: 'Esta função não existe' });
+      return res
+        .status(404)
+        .json({ erro: 'Esta função não existe ou está desativada' });
     }
-
-    if (func.canceled_at != null) {
-      return res.status(400).json({ erro: 'Esta função foi desativada' });
-    }
-
     await func.update({ canceled_at: new Date() });
 
     return res.send();
