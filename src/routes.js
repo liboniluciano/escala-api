@@ -39,6 +39,10 @@ routes.use(AdminMiddleware);
 
 /** Rotas para categorias */
 routes.post('/categories', CategoriesController.store);
+routes.get('/categories', CategoriesController.index);
+routes.get('/categories/:id', CategoriesController.index);
+routes.put('/categories/:id', CategoriesController.update);
+routes.delete('/categories/:id', CategoriesController.delete);
 
 /** Rotas para Funções */
 routes.get('/funcoes', FunctionsController.index);
