@@ -4,7 +4,6 @@ import VolunteersGroups from '../models/VolunteersGroups';
 import Volunteers from '../models/Volunteers';
 import Groups from '../models/Groups';
 import Functions from '../models/Functions';
-import VolunteersFunctions from '../models/VolunteersFunctions';
 
 class VolunteersGroupsController {
   async index(req, res) {

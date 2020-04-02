@@ -1,11 +1,11 @@
 import * as Yup from 'yup';
 import { Op } from 'sequelize';
+import { parseISO, isBefore, format, startOfHour } from 'date-fns';
 
 import Scales from '../models/Scales';
 import Groups from '../models/Groups';
 import Periods from '../models/Periods';
 import Ministries from '../models/Ministries';
-import Volunteers from '../models/Volunteers';
 import VolunteersGroups from '../models/VolunteersGroups';
 
 class ScalesController {
@@ -37,6 +37,22 @@ class ScalesController {
       date,
       observations,
     } = req.body;
+
+    const dateFormatted = format(new Date(), 'yyyy-MM-dd');
+
+    // Pegando o início da hora
+    const hourStart = startOfHour(parseISO(date));
+
+    // Verificando se a data está passada
+    if (isBefore(hourStart, new Date())) {
+      if (date === dateFormatted) {
+        /** gambiarra? */
+      } else {
+        return res
+          .status(400)
+          .json({ error: 'Datas passadas não são permitidas' });
+      }
+    }
 
     /** Validando ids de grupo, período e ministério */
     const group = await Groups.findByPk(id_group, {
@@ -86,6 +102,12 @@ class ScalesController {
       attributes: ['id_volunteer'],
     });
 
+    if (volunteers.length === 0) {
+      return res
+        .status(404)
+        .json({ message: 'Não foi encontrado nenhum voluntário neste grupo!' });
+    }
+
     /** Ids dos voluntários nos grupos */
     const groups = [];
 
@@ -122,7 +144,7 @@ class ScalesController {
     }
 
     /** Salvando a escala */
-    /*
+
     const { id } = await Scales.create({
       id_group,
       id_period,
@@ -132,10 +154,10 @@ class ScalesController {
       date,
       observations,
     });
-    */
 
     /** Recuperando escala salva com as informações */
-    /* const scale = await Scales.findByPk(id, {
+
+    const scale = await Scales.findByPk(id, {
       attributes: ['title', 'date', 'observations'],
       include: [
         {
@@ -152,10 +174,8 @@ class ScalesController {
         },
       ],
     });
-    */
-    console.log(groups);
-    return res.json(groups);
-    // return res.json(scale);
+
+    return res.json(scale);
   }
 }
 
