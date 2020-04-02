@@ -5,7 +5,7 @@ class FunctionsController {
   async index(req, res) {
     const functions = await Functions.findAll({
       order: ['created_at'],
-      attributes: ['id', 'name', 'canceled_at'],
+      attributes: ['id', 'name', 'disabled_at'],
     });
 
     return res.json(functions);

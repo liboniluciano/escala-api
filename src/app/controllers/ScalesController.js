@@ -1,9 +1,12 @@
 import * as Yup from 'yup';
+import { Op } from 'sequelize';
 
 import Scales from '../models/Scales';
 import Groups from '../models/Groups';
 import Periods from '../models/Periods';
 import Ministries from '../models/Ministries';
+import Volunteers from '../models/Volunteers';
+import VolunteersGroups from '../models/VolunteersGroups';
 
 class ScalesController {
   async store(req, res) {
@@ -16,7 +19,7 @@ class ScalesController {
         .max(80)
         .required(),
       date: Yup.date().required(),
-      note: Yup.string()
+      observations: Yup.string()
         .max(300)
         .required(),
     });
@@ -26,11 +29,18 @@ class ScalesController {
       return res.status(401).json({ erro: 'Os campos estão inválidos!' });
     }
 
-    const { id_group, id_period, id_ministery, date } = req.body;
+    const {
+      id_group,
+      id_period,
+      id_ministery,
+      title,
+      date,
+      observations,
+    } = req.body;
 
     /** Validando ids de grupo, período e ministério */
     const group = await Groups.findByPk(id_group, {
-      where: { desatived_at: null },
+      where: { disabled_at: null },
     });
 
     if (!group) {
@@ -40,7 +50,7 @@ class ScalesController {
     }
 
     const period = await Periods.findByPk(id_period, {
-      where: { desatived_at: null },
+      where: { disabled_at: null },
     });
 
     if (!period) {
@@ -60,7 +70,7 @@ class ScalesController {
     }
 
     /** Verificar se aquele grupo já está escalado naquele dia e período */
-    const scaleGroup = await Groups.findOne({
+    const scaleGroup = await Scales.findOne({
       where: { date, id_period },
     });
 
@@ -70,9 +80,82 @@ class ScalesController {
         .json({ message: 'Este grupo já está escalado nesta data e período' });
     }
 
-    /** Verificar se o voluntário está em alguma escala no mesmo período */
+    /** Verificar se algum voluntário do grupo já está escalado na mesma data e período */
+    const volunteers = await VolunteersGroups.findAll({
+      where: { id_group },
+      attributes: ['id_volunteer'],
+    });
 
-    return res.json({ ok: 'Ok' });
+    /** Ids dos voluntários nos grupos */
+    const groups = [];
+
+    /** Pegando os ids dos voluntários do grupo */
+    for (const volunteer of volunteers) {
+      const volGroups = await VolunteersGroups.findAll({
+        attributes: ['id_group'],
+        where: { id_volunteer: volunteer.id_volunteer },
+        group: ['id_group'],
+      });
+
+      /** Pegando grupos dos quais os voluntários fazem parte */
+      for (const volGroup of volGroups) {
+        if (groups[0] !== volGroup.id_group) groups.push(volGroup.id_group);
+      }
+    }
+
+    /** Verificar se algum voluntário do grupo está escalado em outro grpo */
+
+    for (const groupScale of groups) {
+      const existsGroupScale = await Scales.findOne({
+        where: {
+          id_group: groupScale,
+          [Op.or]: [{ date }, { id_period }],
+        },
+      });
+
+      if (existsGroupScale) {
+        return res.status(401).json({
+          message:
+            'Algum voluntário deste já está escalado nesta data e período em outro grupo!',
+        });
+      }
+    }
+
+    /** Salvando a escala */
+    /*
+    const { id } = await Scales.create({
+      id_group,
+      id_period,
+      id_volunteer_created: req.userId,
+      id_ministery,
+      title,
+      date,
+      observations,
+    });
+    */
+
+    /** Recuperando escala salva com as informações */
+    /* const scale = await Scales.findByPk(id, {
+      attributes: ['title', 'date', 'observations'],
+      include: [
+        {
+          model: Groups,
+          attributes: ['name'],
+        },
+        {
+          model: Periods,
+          attributes: ['name'],
+        },
+        {
+          model: Ministries,
+          attributes: ['name'],
+        },
+      ],
+    });
+    */
+    console.log(groups);
+    return res.json(groups);
+    // return res.json(scale);
   }
 }
 

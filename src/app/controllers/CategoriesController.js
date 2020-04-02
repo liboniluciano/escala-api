@@ -1,6 +1,5 @@
 import * as Yup from 'yup';
 
-import { DatabaseError } from 'sequelize/types';
 import Categories from '../models/Categories';
 
 class CategoriesController {

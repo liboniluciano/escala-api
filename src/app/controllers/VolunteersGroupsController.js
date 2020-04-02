@@ -4,6 +4,7 @@ import VolunteersGroups from '../models/VolunteersGroups';
 import Volunteers from '../models/Volunteers';
 import Groups from '../models/Groups';
 import Functions from '../models/Functions';
+import VolunteersFunctions from '../models/VolunteersFunctions';
 
 class VolunteersGroupsController {
   async index(req, res) {
@@ -64,12 +65,11 @@ class VolunteersGroupsController {
     if (!(await schema.isValid(req.body))) {
       return res.status(401).json({ erro: 'Os campos estão inválidos!' });
     }
-
     const { id_volunteer, id_group, id_function } = req.body;
 
     /** Validando se os ids existem */
-    const volunteer = await Volunteers.findByPk(id_volunteer, {
-      where: { desatived_at: null },
+    const volunteer = await Volunteers.findOne({
+      where: { id: id_volunteer, disabled_at: null },
     });
 
     if (!volunteer) {
@@ -79,7 +79,7 @@ class VolunteersGroupsController {
     }
 
     const group = await Groups.findByPk(id_group, {
-      where: { desatived_at: null },
+      where: { disabled_at: null },
     });
 
     if (!group) {
@@ -88,29 +88,12 @@ class VolunteersGroupsController {
         .json({ erro: 'Este grupo não existe ou está desativado!' });
     }
 
-    const func = await Functions.findByPk(id_function, {
-      where: { canceled_at: null },
-    });
-
-    if (!func) {
-      return res
-        .status(404)
-        .json({ erro: 'Esta função não existe ou está desativada!' });
-    }
-
-    /** Verificando se o voluntário já está alocado naquela função do grupo */
-    // const funcGroupExists = VolunteersGroups.findOne({
-    //   where: { id_function },
-    // });
-
-    // if (funcGroupExists) {
-    //   return res
-    //     .status(401)
-    //     .json({ erro: 'O voluntário já está alocado nesta função!' });
-    // }
-
     /** Inserindo voluntário no grupo */
-    const { id } = await VolunteersGroups.create(req.body);
+    const { id } = await VolunteersGroups.create({
+      id_volunteer,
+      id_group,
+      id_function,
+    });
 
     const volunteerGroup = await VolunteersGroups.findByPk(id, {
       attributes: ['id'],
@@ -122,10 +105,6 @@ class VolunteersGroupsController {
         {
           model: Groups,
           attributes: ['id', 'name'],
-        },
-        {
-          model: Functions,
-          attributes: ['name'],
         },
       ],
     });

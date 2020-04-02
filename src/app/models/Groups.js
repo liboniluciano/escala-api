@@ -7,7 +7,7 @@ class Groups extends Model {
         id_volunteer_created: Sequelize.INTEGER,
         id_ministry: Sequelize.INTEGER,
         name: Sequelize.STRING,
-        desatived_at: Sequelize.DATE,
+        disabled_at: Sequelize.DATE,
       },
       {
         sequelize,
@@ -18,7 +18,7 @@ class Groups extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.Volunteers, { foreignKey: 'volunteer_id_created' });
+    this.belongsTo(models.Volunteers, { foreignKey: 'id_volunteer_created' });
     this.belongsTo(models.Groups, { foreignKey: 'id_ministry' });
   }
 }

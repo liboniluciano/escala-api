@@ -8,7 +8,7 @@ class PeriodsController {
 
     if (idPeriod) {
       const period = await Periods.findByPk(idPeriod, {
-        where: { disabled_At: null },
+        where: { disabled_at: null },
         attributes: ['id', 'name'],
       });
 

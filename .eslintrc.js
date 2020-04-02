@@ -24,5 +24,6 @@ module.exports = {
     "no-unused-vars": ["error", {"argsIgnorePattern": "next"}],
     "linebreak-style": 0,
     "global-require": 0,
+    "no-restricted-syntax": ["error", "ForInStatement", "LabeledStatement", "WithStatement"],
   },
 };
