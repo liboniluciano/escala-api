@@ -22,7 +22,9 @@ class SessionController {
 
     const { email, password } = req.body;
 
-    const volunteer = await Volunteers.findOne({ where: { email } });
+    const volunteer = await Volunteers.findOne({
+      where: { email },
+    });
 
     if (!volunteer) {
       return res.status(404).json({ erro: 'Voluntário não encontrado!' });
@@ -32,13 +34,16 @@ class SessionController {
       return res.status(401).json({ erro: 'A senha não corresponde!' });
     }
 
-    const { id, name } = volunteer;
+    const { id, name, telephone, admin } = volunteer;
 
     /** Gerando o hash */
     return res.json({
       user: {
         id,
         name,
+        email,
+        telephone,
+        admin,
       },
       token: jwt.sign({ id }, authConfig.secret, {
         expiresIn: authConfig.expiresIn,
